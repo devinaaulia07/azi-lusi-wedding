@@ -179,6 +179,8 @@
         </button>
     </div>
 
+    <audio id="wedding-audio" src="videoplayback (2).m4a" preload="auto" loop></audio>
+    
     <!-- MAIN INVITATION CONTENT WRAPPER (Initially overflow hidden until opened) -->
     <main id="main-content" class="relative max-w-xl mx-auto shadow-2xl bg-champagne-100 min-h-screen pb-28 border-x border-sage-100">
 
@@ -481,33 +483,18 @@
             </div>
 
             <div class="space-y-4 max-w-md mx-auto reveal-item">
-                <!-- Rekening 1: Bank BCA -->
+                <!-- Rekening : SeaBank -->
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-sage-200">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="font-bold text-sm text-blue-800">BANK BCA</span>
+                        <span class="font-bold text-sm text-blue-800">SEABANK </span>
                         <i class="fa-solid fa-credit-card text-stone-400"></i>
                     </div>
                     <p class="text-xs text-stone-500">Nomor Rekening:</p>
-                    <p id="rekening-bca" class="font-mono text-base font-bold text-stone-800 tracking-wider">1480928371</p>
-                    <p class="text-xs text-stone-600 mt-0.5">a.n <span class="font-semibold">Azi</span></p>
+                    <p id="rekening-seabank" class="font-mono text-base font-bold text-stone-800 tracking-wider">901131686738 </p>
+                    <p class="text-xs text-stone-600 mt-0.5">a.n <span class="font-semibold">a.n Lusi Agustiani</span></p>
 
-                    <button onclick="copyToClipboard('1480928371', 'Rekening BCA')" class="mt-4 w-full py-2.5 px-4 rounded-xl bg-sage-100 text-sage-800 text-xs font-semibold hover:bg-sage-200 flex items-center justify-center gap-2 transition-colors">
+                    <button onclick="copyToClipboard('901131686738', 'Rekening SEABANK')" class="mt-4 w-full py-2.5 px-4 rounded-xl bg-sage-100 text-sage-800 text-xs font-semibold hover:bg-sage-200 flex items-center justify-center gap-2 transition-colors">
                         <i class="fa-regular fa-copy"></i> Salin No. Rekening
-                    </button>
-                </div>
-
-                <!-- Rekening 2: Bank BRI / E-Wallet -->
-                <div class="bg-white p-5 rounded-3xl shadow-sm border border-sage-200">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="font-bold text-sm text-blue-600">BANK BRI / DANA</span>
-                        <i class="fa-solid fa-wallet text-stone-400"></i>
-                    </div>
-                    <p class="text-xs text-stone-500">Nomor Rekening / No. HP:</p>
-                    <p id="rekening-bri" class="font-mono text-base font-bold text-stone-800 tracking-wider">085860123984</p>
-                    <p class="text-xs text-stone-600 mt-0.5">a.n <span class="font-semibold">Lusi</span></p>
-
-                    <button onclick="copyToClipboard('085860123984', 'Nomor Rekening / E-Wallet')" class="mt-4 w-full py-2.5 px-4 rounded-xl bg-champagne-100 text-champagne-600 text-xs font-semibold hover:bg-champagne-200 flex items-center justify-center gap-2 transition-colors">
-                        <i class="fa-regular fa-copy"></i> Salin Nomor
                     </button>
                 </div>
             </div>
@@ -638,92 +625,47 @@
         });
 
         /* ----------------------------------------------------
-           2. WEB AUDIO API - INSTRUMENTAL AKUSTIK "AKAD" STYLE
+           2. WEB AUDIO API - INSTRUMENTAL AKUSTIK "WEDDING" STYLE
         ------------------------------------------------------- */
-        let audioCtx = null;
-        let isMusicPlaying = false;
-        let audioTimer = null;
-        const musicBtn = document.getElementById('music-toggle-btn');
-        const musicIcon = document.getElementById('music-icon');
+        const weddingAudio = document.getElementById('wedding-audio');
+const musicToggleBtn = document.getElementById('music-toggle-btn');
+const musicIcon = document.getElementById('music-icon');
+let isMusicPlaying = false;
 
-        // Melodi Akustik Hangat (Gaya Payung Teduh - Akad)
-        const notesFreq = {
-            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00,
-            'A4': 440.00, 'B4': 493.88, 'C5': 523.25, 'D5': 587.33, 'E5': 659.25,
-            'F5': 698.46, 'G5': 783.99, 'A5': 880.00, 'REST': 0
-        };
+function toggleMusic() {
+  if (!weddingAudio) return;
+  
+  if (isMusicPlaying) {
+    weddingAudio.pause();
+    if (musicIcon) musicIcon.classList.remove('animate-spin-slow');
+    isMusicPlaying = false;
+  } else {
+    weddingAudio.play().then(() => {
+      if (musicIcon) musicIcon.classList.add('animate-spin-slow');
+      isMusicPlaying = true;
+    }).catch(err => {
+      console.log('Autoplay ditahan browser:', err);
+    });
+  }
+}
 
-        // Progresi melodi romantis santai
-        const acousticMelody = [
-            { note: 'C4', duration: 0.4 }, { note: 'E4', duration: 0.4 }, { note: 'G4', duration: 0.4 }, { note: 'C5', duration: 0.6 },
-            { note: 'B4', duration: 0.4 }, { note: 'A4', duration: 0.4 }, { note: 'G4', duration: 0.8 },
-            { note: 'F4', duration: 0.4 }, { note: 'A4', duration: 0.4 }, { note: 'C5', duration: 0.4 }, { note: 'D5', duration: 0.6 },
-            { note: 'C5', duration: 0.4 }, { note: 'B4', duration: 0.4 }, { note: 'C5', duration: 1.0 },
-            { note: 'E5', duration: 0.5 }, { note: 'D5', duration: 0.5 }, { note: 'C5', duration: 0.5 }, { note: 'G4', duration: 0.8 },
-            { note: 'A4', duration: 0.5 }, { note: 'C5', duration: 0.5 }, { note: 'D5', duration: 0.8 }, { note: 'C5', duration: 1.2 }
-        ];
+if (musicToggleBtn) {
+  musicToggleBtn.addEventListener('click', toggleMusic);
+}
 
-        let noteIndex = 0;
-
-        function playAcousticPluck(freq, duration) {
-            if (!audioCtx || freq === 0) return;
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            // Nuansa warm akustik
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-            gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        }
-
-        function loopSong() {
-            if (!isMusicPlaying) return;
-            const current = acousticMelody[noteIndex];
-            playAcousticPluck(notesFreq[current.note], current.duration * 1.1);
-
-            noteIndex = (noteIndex + 1) % acousticMelody.length;
-            audioTimer = setTimeout(loopSong, current.duration * 1000);
-        }
-
-        function startMusic() {
-            if (!audioCtx) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContextClass();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            isMusicPlaying = true;
-            musicIcon.classList.add('animate-spin-slow');
-            loopSong();
-        }
-
-        function stopMusic() {
-            isMusicPlaying = false;
-            clearTimeout(audioTimer);
-            musicIcon.classList.remove('animate-spin-slow');
-        }
-
-        musicBtn.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                stopMusic();
-                showToast("Musik dimatikan");
-            } else {
-                startMusic();
-                showToast("Memutar alunan melodi");
-            }
-        });
-
+function openInvitation() {
+  const cover = document.getElementById('cover');
+  if (cover) {
+    cover.classList.add('cover-hide');
+    setTimeout(() => {
+      cover.style.display = 'none';
+    }, 900);
+  }
+  
+  if (!isMusicPlaying) {
+    toggleMusic();
+  }
+}
         /* ----------------------------------------------------
            3. BUKA UNDANGAN (SPLASH SCREEN TRANSISI)
         ------------------------------------------------------- */
