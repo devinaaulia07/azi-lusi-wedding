@@ -163,7 +163,7 @@
                 <p class="text-[10px] text-stone-400 mt-1 italic">*Mohon maaf bila ada kesalahan penulisan nama/gelar</p>
             </div>
 
-            <button id="btn-open-invitation" class="relative group inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-full bg-gradient-to-r from-champagne-500 to-champagne-400 text-stone-900 font-semibold shadow-lg hover:shadow-champagne-500/40 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none">
+          <button id="btn-open-invitation" onclick="openInvitation()" class="relative group inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-full bg-gradient-to-r from-champagne-500 to-champagne-400 text-stone-900 font-semibold shadow-lg hover:shadow-champagne-500/40 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none">
                 <i class="fa-solid fa-envelope-open-text text-base transition-transform group-hover:scale-110"></i>
                 <span class="tracking-wider text-xs uppercase font-bold">Buka Undangan</span>
             </button>
@@ -655,15 +655,25 @@ if (musicToggleBtn) {
 
 function openInvitation() {
   const cover = document.getElementById('cover');
+  const weddingAudio = document.getElementById('wedding-audio');
+  const musicIcon = document.getElementById('music-icon');
+
+  // Putar lagu langsung saat cover dibuka
+  if (weddingAudio) {
+    weddingAudio.play().then(() => {
+      isMusicPlaying = true;
+      if (musicIcon) musicIcon.classList.add('animate-spin-slow');
+    }).catch(err => {
+      console.log('Error pemutaran audio:', err);
+    });
+  }
+
+  // Sembunyikan cover
   if (cover) {
     cover.classList.add('cover-hide');
     setTimeout(() => {
       cover.style.display = 'none';
     }, 900);
-  }
-  
-  if (!isMusicPlaying) {
-    toggleMusic();
   }
 }
         /* ----------------------------------------------------
